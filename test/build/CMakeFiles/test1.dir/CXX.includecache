@@ -1,0 +1,32 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/onnxruntime/core/session/onnxruntime_c_api.h
+stdlib.h
+-
+stdint.h
+-
+string.h
+-
+specstrings.h
+-
+
+/home/alexdockermother/Documents/MyProject/ONNX/test/src/test1.cpp
+assert.h
+-
+cmath
+-
+stdlib.h
+-
+stdio.h
+-
+vector
+-
+onnxruntime_c_api.h
+/home/alexdockermother/Documents/MyProject/ONNX/test/src/onnxruntime_c_api.h
+
