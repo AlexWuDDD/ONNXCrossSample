@@ -1,4 +1,5 @@
-/home/alexdockermother/Documents/MyProject/ONNX/test/build/CMakeFiles/rebuild_cache.dir
-/home/alexdockermother/Documents/MyProject/ONNX/test/build/CMakeFiles/edit_cache.dir
-/home/alexdockermother/Documents/MyProject/ONNX/test/build/CMakeFiles/test1.dir
-/home/alexdockermother/Documents/MyProject/ONNX/test/build/CMakeFiles/testEndian.dir
+/home/alexdockermother/Documents/MyProject/ONNX/project/test/build/CMakeFiles/rebuild_cache.dir
+/home/alexdockermother/Documents/MyProject/ONNX/project/test/build/CMakeFiles/edit_cache.dir
+/home/alexdockermother/Documents/MyProject/ONNX/project/test/build/CMakeFiles/testONNXWorker.dir
+/home/alexdockermother/Documents/MyProject/ONNX/project/test/build/CMakeFiles/test1.dir
+/home/alexdockermother/Documents/MyProject/ONNX/project/test/build/CMakeFiles/testEndian.dir

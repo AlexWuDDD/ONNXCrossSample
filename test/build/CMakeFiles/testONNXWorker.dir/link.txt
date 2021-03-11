@@ -1,0 +1,1 @@
+/home/alexdockermother/Documents/m881/aarch64/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-g++     CMakeFiles/testONNXWorker.dir/src/testONNXWorker.cpp.o CMakeFiles/testONNXWorker.dir/src/ONNXWorker.cpp.o  -o testONNXWorker   -L/usr/IDAS/ONNX/libs  -Wl,-rpath,/usr/IDAS/ONNX/libs -lonnxruntime -lpthread -latomic 

@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.13)
 project(ONNXRuntimeTest)
 
+
+add_definitions("-Wall -g")
+
 set(CMAKE_CXX_STANDARD 11)
 
 set(INC_DIR1 ${PROJECT_SOURCE_DIR}/include)
@@ -33,5 +36,9 @@ add_executable(testEndian ./src/testEndian.cpp)
 
 add_executable(test1 ./src/test1.cpp)
 target_link_libraries(test1 onnxruntime pthread atomic)
+
+add_executable(testONNXWorker ./src/testONNXWorker.cpp ./src/ONNXWorker.cpp ./src/ONNXWorker.h)
+target_link_libraries(testONNXWorker onnxruntime pthread atomic)
+
 
 

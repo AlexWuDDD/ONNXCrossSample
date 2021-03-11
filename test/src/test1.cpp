@@ -48,7 +48,7 @@ int main(int argc, char* argv[]) {
 #ifdef _WIN32
   const wchar_t* model_path = L"squeezenet.onnx";
 #else
-  const char* model_path = "./squeezenet.onnx";
+  const char* model_path = "/usr/IDAS/ONNX/model/squeezenet.onnx";
 #endif
 
   printf("Using Onnxruntime C API\n");
@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
                                          // Otherwise need vector<vector<>>
 
   printf("Number of inputs = %zu\n", num_input_nodes);
-
+  size_t input_tensor_size = 0;
   // iterate over all input nodes
   for (size_t i = 0; i < num_input_nodes; i++) {
     // print input node names
@@ -95,6 +95,8 @@ int main(int argc, char* argv[]) {
     for (size_t j = 0; j < num_dims; j++)
       printf("Input %zu : dim %zu=%jd\n", i, j, input_node_dims[j]);
 
+
+  g_ort->GetTensorShapeElementCount(tensor_info, &input_tensor_size);
 	g_ort->ReleaseTypeInfo(typeinfo);
   }
 
@@ -116,16 +118,18 @@ int main(int argc, char* argv[]) {
   //*************************************************************************
   // Score the model using sample data, and inspect values
 
-  size_t input_tensor_size = 224 * 224 * 3;  // simplify ... using known dim values to calculate size
-                                             // use OrtGetTensorShapeElementCount() to get official size!
+  // size_t input_tensor_size = 224 * 224 * 3;  // simplify ... using known dim values to calculate size
+  //                                            // use OrtGetTensorShapeElementCount() to get official size!
 
   std::vector<float> input_tensor_values(input_tensor_size);
   std::vector<const char*> output_node_names = {"softmaxout_1"};
 
   // initialize input data with values in [0.0, 1.0]
-  for (size_t i = 0; i < input_tensor_size; i++)
+  for (size_t i = 0; i < input_tensor_size; i++){
     input_tensor_values[i] = (float)i / (input_tensor_size + 1);
-
+    
+  }
+  printf("data size: %d\n", input_tensor_values.size());
   // create input tensor object from data values
   OrtMemoryInfo* memory_info;
   CheckStatus(g_ort->CreateCpuMemoryInfo(OrtArenaAllocator, OrtMemTypeDefault, &memory_info));
@@ -148,7 +152,7 @@ int main(int argc, char* argv[]) {
   assert(std::abs(floatarr[0] - 0.000045) < 1e-6);
 
   // score the model, and print scores for first 5 classes
-  for (int i = 0; i < 5; i++)
+  for (int i = 0; i < 10; i++)
     printf("Score for class [%d] =  %f\n", i, floatarr[i]);
 
   // Results should be as below...

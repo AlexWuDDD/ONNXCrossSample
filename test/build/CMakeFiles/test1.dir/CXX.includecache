@@ -16,7 +16,7 @@ string.h
 specstrings.h
 -
 
-/home/alexdockermother/Documents/MyProject/ONNX/test/src/test1.cpp
+/home/alexdockermother/Documents/MyProject/ONNX/project/test/src/test1.cpp
 assert.h
 -
 cmath
@@ -28,5 +28,5 @@ stdio.h
 vector
 -
 onnxruntime_c_api.h
-/home/alexdockermother/Documents/MyProject/ONNX/test/src/onnxruntime_c_api.h
+/home/alexdockermother/Documents/MyProject/ONNX/project/test/src/onnxruntime_c_api.h
 

@@ -16,19 +16,19 @@ make -C "./build"
 cp ./build/test* ./bin/
 
 
-# BoxIP="10.0.0.197"
-# User="root"
-# SourceFolder1="./bin"
+BoxIP="10.0.0.197"
+User="root"
+SourceFolder1="./bin"
 # SourceFolder2="./libs"
-# SourceFolder3="./model"
-# TargetFolder="/usr/IDAS/ONNX"
+SourceFolder3="./model"
+TargetFolder="/usr/IDAS/ONNX"
 
-# echo "This foler - ${SourceFolder1} - is upload the newest file to the target box - ${TargetFolder}"
+echo "This foler - ${SourceFolder1} - is upload the newest file to the target box - ${TargetFolder}"
 # echo "This foler - ${SourceFolder2} - is upload the newest file to the target box - ${TargetFolder}"
-# echo "This foler - ${SourceFolder3} - is upload the newest file to the target box - ${TargetFolder}"
+echo "This foler - ${SourceFolder3} - is upload the newest file to the target box - ${TargetFolder}"
 
 
-# ssh "${User}@${BoxIP}" "[ -d ${TargetFolder} ] && echo ok || mkdir -p ${TargetFolder}"
-# scp -prq "${SourceFolder1}" "${User}@${BoxIP}:${TargetFolder}"
+ssh "${User}@${BoxIP}" "[ -d ${TargetFolder} ] && echo ok || mkdir -p ${TargetFolder}"
+scp -prq "${SourceFolder1}" "${User}@${BoxIP}:${TargetFolder}"
 # scp -prq "${SourceFolder2}" "${User}@${BoxIP}:${TargetFolder}"
-# scp -prq "${SourceFolder3}" "${User}@${BoxIP}:${TargetFolder}"
+scp -prq "${SourceFolder3}" "${User}@${BoxIP}:${TargetFolder}"

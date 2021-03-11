@@ -1,0 +1,46 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../include/onnxruntime/core/session/onnxruntime_c_api.h
+stdlib.h
+-
+stdint.h
+-
+string.h
+-
+specstrings.h
+-
+
+/home/alexdockermother/Documents/MyProject/ONNX/project/test/src/ONNXWorker.cpp
+ONNXWorker.h
+/home/alexdockermother/Documents/MyProject/ONNX/project/test/src/ONNXWorker.h
+cassert
+-
+cmath
+-
+stdlib.h
+-
+stdio.h
+-
+
+/home/alexdockermother/Documents/MyProject/ONNX/project/test/src/ONNXWorker.h
+string
+-
+onnxruntime_c_api.h
+/home/alexdockermother/Documents/MyProject/ONNX/project/test/src/onnxruntime_c_api.h
+vector
+-
+utility
+-
+
+/home/alexdockermother/Documents/MyProject/ONNX/project/test/src/testONNXWorker.cpp
+ONNXWorker.h
+/home/alexdockermother/Documents/MyProject/ONNX/project/test/src/ONNXWorker.h
+stdio.h
+-
+

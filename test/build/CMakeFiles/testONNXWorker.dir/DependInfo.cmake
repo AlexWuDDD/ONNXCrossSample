@@ -4,7 +4,8 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/alexdockermother/Documents/MyProject/ONNX/project/test/src/testEndian.cpp" "/home/alexdockermother/Documents/MyProject/ONNX/project/test/build/CMakeFiles/testEndian.dir/src/testEndian.cpp.o"
+  "/home/alexdockermother/Documents/MyProject/ONNX/project/test/src/ONNXWorker.cpp" "/home/alexdockermother/Documents/MyProject/ONNX/project/test/build/CMakeFiles/testONNXWorker.dir/src/ONNXWorker.cpp.o"
+  "/home/alexdockermother/Documents/MyProject/ONNX/project/test/src/testONNXWorker.cpp" "/home/alexdockermother/Documents/MyProject/ONNX/project/test/build/CMakeFiles/testONNXWorker.dir/src/testONNXWorker.cpp.o"
   )
 set(CMAKE_CXX_COMPILER_ID "GNU")
 

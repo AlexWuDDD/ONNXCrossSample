@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/alexdockermother/Documents/MyProject/ONNX/test
+CMAKE_SOURCE_DIR = /home/alexdockermother/Documents/MyProject/ONNX/project/test
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/alexdockermother/Documents/MyProject/ONNX/test/build
+CMAKE_BINARY_DIR = /home/alexdockermother/Documents/MyProject/ONNX/project/test/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alexdockermother/Documents/MyProject/ONNX/test/build/CMakeFiles /home/alexdockermother/Documents/MyProject/ONNX/test/build/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alexdockermother/Documents/MyProject/ONNX/project/test/build/CMakeFiles /home/alexdockermother/Documents/MyProject/ONNX/project/test/build/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/alexdockermother/Documents/MyProject/ONNX/test/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/alexdockermother/Documents/MyProject/ONNX/project/test/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named testONNXWorker
+
+# Build rule for target.
+testONNXWorker: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 testONNXWorker
+.PHONY : testONNXWorker
+
+# fast build rule for target.
+testONNXWorker/fast:
+	$(MAKE) -f CMakeFiles/testONNXWorker.dir/build.make CMakeFiles/testONNXWorker.dir/build
+.PHONY : testONNXWorker/fast
+
+#=============================================================================
 # Target rules for targets named test1
 
 # Build rule for target.
@@ -135,6 +148,33 @@ testEndian: cmake_check_build_system
 testEndian/fast:
 	$(MAKE) -f CMakeFiles/testEndian.dir/build.make CMakeFiles/testEndian.dir/build
 .PHONY : testEndian/fast
+
+src/ONNXWorker.o: src/ONNXWorker.cpp.o
+
+.PHONY : src/ONNXWorker.o
+
+# target to build an object file
+src/ONNXWorker.cpp.o:
+	$(MAKE) -f CMakeFiles/testONNXWorker.dir/build.make CMakeFiles/testONNXWorker.dir/src/ONNXWorker.cpp.o
+.PHONY : src/ONNXWorker.cpp.o
+
+src/ONNXWorker.i: src/ONNXWorker.cpp.i
+
+.PHONY : src/ONNXWorker.i
+
+# target to preprocess a source file
+src/ONNXWorker.cpp.i:
+	$(MAKE) -f CMakeFiles/testONNXWorker.dir/build.make CMakeFiles/testONNXWorker.dir/src/ONNXWorker.cpp.i
+.PHONY : src/ONNXWorker.cpp.i
+
+src/ONNXWorker.s: src/ONNXWorker.cpp.s
+
+.PHONY : src/ONNXWorker.s
+
+# target to generate assembly for a file
+src/ONNXWorker.cpp.s:
+	$(MAKE) -f CMakeFiles/testONNXWorker.dir/build.make CMakeFiles/testONNXWorker.dir/src/ONNXWorker.cpp.s
+.PHONY : src/ONNXWorker.cpp.s
 
 src/test1.o: src/test1.cpp.o
 
@@ -190,6 +230,33 @@ src/testEndian.cpp.s:
 	$(MAKE) -f CMakeFiles/testEndian.dir/build.make CMakeFiles/testEndian.dir/src/testEndian.cpp.s
 .PHONY : src/testEndian.cpp.s
 
+src/testONNXWorker.o: src/testONNXWorker.cpp.o
+
+.PHONY : src/testONNXWorker.o
+
+# target to build an object file
+src/testONNXWorker.cpp.o:
+	$(MAKE) -f CMakeFiles/testONNXWorker.dir/build.make CMakeFiles/testONNXWorker.dir/src/testONNXWorker.cpp.o
+.PHONY : src/testONNXWorker.cpp.o
+
+src/testONNXWorker.i: src/testONNXWorker.cpp.i
+
+.PHONY : src/testONNXWorker.i
+
+# target to preprocess a source file
+src/testONNXWorker.cpp.i:
+	$(MAKE) -f CMakeFiles/testONNXWorker.dir/build.make CMakeFiles/testONNXWorker.dir/src/testONNXWorker.cpp.i
+.PHONY : src/testONNXWorker.cpp.i
+
+src/testONNXWorker.s: src/testONNXWorker.cpp.s
+
+.PHONY : src/testONNXWorker.s
+
+# target to generate assembly for a file
+src/testONNXWorker.cpp.s:
+	$(MAKE) -f CMakeFiles/testONNXWorker.dir/build.make CMakeFiles/testONNXWorker.dir/src/testONNXWorker.cpp.s
+.PHONY : src/testONNXWorker.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -198,14 +265,21 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... testONNXWorker"
 	@echo "... test1"
 	@echo "... testEndian"
+	@echo "... src/ONNXWorker.o"
+	@echo "... src/ONNXWorker.i"
+	@echo "... src/ONNXWorker.s"
 	@echo "... src/test1.o"
 	@echo "... src/test1.i"
 	@echo "... src/test1.s"
 	@echo "... src/testEndian.o"
 	@echo "... src/testEndian.i"
 	@echo "... src/testEndian.s"
+	@echo "... src/testONNXWorker.o"
+	@echo "... src/testONNXWorker.i"
+	@echo "... src/testONNXWorker.s"
 .PHONY : help
 
 
