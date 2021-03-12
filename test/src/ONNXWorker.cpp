@@ -301,102 +301,6 @@ std::vector<float> ONNXWorker::prepareSingleInputTensorData(size_t input_tensor_
     return input_tensor_values;
 }
 
-bool ONNXWorker::prepareSingleInputTensor(std::vector<float> &input_tensor_values, 
-    size_t input_tensor_size, std::vector<int64_t> &input_node_dims, OrtValue**input_tensor)
-{
-    OrtMemoryInfo* memory_info;
-    bool flag = CheckStatus(g_ort->CreateCpuMemoryInfo(OrtArenaAllocator, OrtMemTypeDefault, &memory_info));
-    if(flag == false){
-        return false;
-    }
-
-    bool ret = true;    
-    flag = CheckStatus(g_ort->CreateTensorWithDataAsOrtValue(memory_info, 
-        input_tensor_values.data(), input_tensor_size * sizeof(float), input_node_dims.data(), 
-        input_node_dims.size(), datatype, input_tensor));
-    if(!flag && *input_tensor == nullptr){
-        printf("!!!!!\n");
-        ret = false;
-    }
-    int is_tensor;
-    flag = CheckStatus(g_ort->IsTensor(*input_tensor, &is_tensor));
-    if(!flag && is_tensor == 0){
-        ret = false;
-    }
-    g_ort->ReleaseMemoryInfo(memory_info);
-    return true;
-}
-
-bool ONNXWorker::prepareInputTensors()
-{
-    std::vector<const char*> input_nodesnames = getInputNodesNames();
-    std::vector<std::pair<size_t, std::vector<int64_t>>> nodes_dims = getInputNodesDims();
-    std::vector<size_t> input_tensor_sizes = getInputTensorSizes();
-
-    input_tensors = new(std::nothrow)OrtValue*[input_tensors_len];
-
-    for(int i = 0; i < input_tensors_len; ++i){
-        std::pair<size_t, std::vector<int64_t>> node_dims = nodes_dims[i]; 
-        size_t input_tensor_size = input_tensor_sizes[i];
-        printf("input_tensor_sizes: %d: %d\n",i, input_tensor_size);
-        std::vector<float> input_tensor_values = prepareSingleInputTensorData(input_tensor_size);
-        if(prepareSingleInputTensor(input_tensor_values, input_tensor_size, node_dims.second, &input_tensors[i]) && input_tensors[i] != nullptr){
-            printf("prepareSingleInputTensor - %s - done\n", input_nodesnames[i]);
-        }
-        else{
-            printf("prepareSingleInputTensor - failed\n");
-            return false;
-        }
-    }
-    return true;    
-}
-
-std::vector<float> ONNXWorker::getOutputTensor()
-{
-    std::vector<float> ret;
-    // score model & input tensor, get back output tensor
-    OrtValue* output_tensor = NULL;
-    std::vector<const char*> input_node_names = getInputNodesNames();
-    std::vector<const char*> output_node_names = getOutputNodesNames();
-
-
-    bool flag = CheckStatus(g_ort->Run(session, NULL, input_node_names.data(), 
-        (const OrtValue* const*)input_tensors, input_tensors_len, output_node_names.data(), output_node_names.size(), &output_tensor));
-    if(!flag){
-        g_ort->ReleaseValue(output_tensor);
-        return ret;
-    }
-    int is_tensor;
-    flag = CheckStatus(g_ort->IsTensor(output_tensor, &is_tensor));
-    if(!flag && is_tensor == 0){
-        g_ort->ReleaseValue(output_tensor);
-        return ret;
-    }
-
-    // Get pointer to output tensor float values
-    float* floatarr;
-    flag = CheckStatus(g_ort->GetTensorMutableData(output_tensor, (void**)&floatarr));
-    if(!flag){
-        g_ort->ReleaseValue(output_tensor);
-        return ret;
-    }
-
-    // score the model, and print scores for first 5 classes
-    for (int i = 0; i < 10; i++){
-        ret.emplace_back(floatarr[i]);
-    }
-
-    for(int i = 0; i < input_tensors_len; ++i){
-        g_ort->ReleaseValue(input_tensors[i]);
-    }
-    delete [] input_tensors;
-    input_tensors == nullptr;
-    input_tensors_len = 0;
-
-    g_ort->ReleaseValue(output_tensor);
-    return ret;
-}
-
 bool ONNXWorker::CheckModelInfo()
 {
     size_t inputNodesNum = getInputNodesNum();
@@ -480,14 +384,13 @@ bool ONNXWorker::CheckModelInfo()
         printf("\n");
     }
 
-
-    datatype = input_types[0];
     return true;
 }
 
 
 std::vector<float> ONNXWorker::getOutputDirect()
 {
+    printf("ONNXWorker::getOutputDirect()\n");
     std::vector<float> ret;
     size_t input_tensor_size = getInputTensorSizes()[0];
     std::vector<float> input_tensor_values = prepareSingleInputTensorData(input_tensor_size);
@@ -495,16 +398,16 @@ std::vector<float> ONNXWorker::getOutputDirect()
     std::vector<const char*> input_nodesnames = getInputNodesNames();
     std::vector<std::pair<size_t, std::vector<int64_t>>> nodes_dims = getInputNodesDims();
     std::vector<size_t> input_tensor_sizes = getInputTensorSizes();
+    std::vector<ONNXTensorElementDataType> input_tensor_types = getInputNodesType();
 
     OrtMemoryInfo* memory_info;
     CheckStatus(g_ort->CreateCpuMemoryInfo(OrtArenaAllocator, OrtMemTypeDefault, &memory_info));
     OrtValue* input_tensor = NULL;
-    CheckStatus(g_ort->CreateTensorWithDataAsOrtValue(memory_info, input_tensor_values.data(), input_tensor_size * sizeof(float), nodes_dims[0].second.data(), nodes_dims[0].second.size(), ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT, &input_tensor));
+    CheckStatus(g_ort->CreateTensorWithDataAsOrtValue(memory_info, input_tensor_values.data(), input_tensor_size * sizeof(float), nodes_dims[0].second.data(), nodes_dims[0].second.size(), input_tensor_types[0], &input_tensor));
     int is_tensor;
     CheckStatus(g_ort->IsTensor(input_tensor, &is_tensor));
     assert(is_tensor);
     g_ort->ReleaseMemoryInfo(memory_info);
-
     // score model & input tensor, get back output tensor
     OrtValue* output_tensor = NULL;
     std::vector<const char*> input_node_names = getInputNodesNames();
@@ -516,11 +419,10 @@ std::vector<float> ONNXWorker::getOutputDirect()
     // Get pointer to output tensor float values
     float* floatarr;
     CheckStatus(g_ort->GetTensorMutableData(output_tensor, (void**)&floatarr));
-    assert(std::abs(floatarr[0] - 0.000045) < 1e-6);
+    // assert(std::abs(floatarr[0] - 0.000045) < 1e-6);
 
     // score the model, and print scores for first 5 classes
     for (int i = 0; i < 10; i++){
-        printf("Score for class [%d] =  %f\n", i, floatarr[i]);
         ret.emplace_back(floatarr[i]);
     }
     g_ort->ReleaseValue(output_tensor);
