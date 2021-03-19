@@ -26,6 +26,12 @@ public:
     
     std::vector<float> getOutputDirect();
     bool CheckModelInfo();
+
+    void getONNXTypeInfo();
+
+    // std::vector<ONNXTensorElementDataType> getOutputNodesType_ONNXTYPE_IS_TENSOR();
+    void getOutputNodesType_ONNXTYPE_IS_SEQUENCE();
+
 private:
     bool CheckStatus(OrtStatus* status);
 

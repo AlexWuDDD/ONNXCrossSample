@@ -303,6 +303,12 @@ std::vector<float> ONNXWorker::prepareSingleInputTensorData(size_t input_tensor_
 
 bool ONNXWorker::CheckModelInfo()
 {
+    printf("****************************************\n");
+    getONNXTypeInfo();
+    printf("****************************************\n");
+    getOutputNodesType_ONNXTYPE_IS_SEQUENCE();
+    printf("****************************************\n");
+    
     size_t inputNodesNum = getInputNodesNum();
     printf("inputNodesNum: %d\n", inputNodesNum);
     std::vector<const char*> inputNodesNames = getInputNodesNames();
@@ -429,4 +435,110 @@ std::vector<float> ONNXWorker::getOutputDirect()
     g_ort->ReleaseValue(input_tensor);
 
     return ret;
+}
+/************************************************************************************************************/
+void ONNXWorker::getONNXTypeInfo()
+{
+    std::vector<ONNXTensorElementDataType> ret;
+    size_t nums = getInputNodesNum();
+    if(nums <= 0){
+        printf ("ONNXWorker::getONNXTypeInfo() - 1");
+        return ;
+    }
+    for(int i = 0; i < nums; ++i){
+        OrtTypeInfo* typeinfo;
+        bool flag = CheckStatus(g_ort->SessionGetInputTypeInfo(session, i, &typeinfo));
+        if(!flag){
+            g_ort->ReleaseTypeInfo(typeinfo);
+            continue;
+        }
+        ONNXType type;
+        g_ort->GetOnnxTypeFromTypeInfo(typeinfo, &type);
+        printf("InputNode type is : %d\n", type);
+        g_ort->ReleaseTypeInfo(typeinfo);
+    }
+
+    nums = getOutputNodesNum();
+    if(nums <= 0){
+        printf ("ONNXWorker::getONNXTypeInfo() - 1");
+        return;
+    }
+    for(int i = 0; i < nums; ++i){
+        OrtTypeInfo* typeinfo;
+        bool flag = CheckStatus(g_ort->SessionGetOutputTypeInfo(session, i, &typeinfo));
+        if(!flag){
+            g_ort->ReleaseTypeInfo(typeinfo);
+            continue;
+        }
+        ONNXType type;
+        g_ort->GetOnnxTypeFromTypeInfo(typeinfo, &type);
+        printf("OutputNode type is : %d\n", type);
+        g_ort->ReleaseTypeInfo(typeinfo);
+    }
+    return ;
+}
+
+void ONNXWorker::getOutputNodesType_ONNXTYPE_IS_SEQUENCE()
+{
+    size_t nums = getOutputNodesNum();
+    if(nums <= 0){
+        return;
+    }
+    for(int i = 0; i < nums; ++i){
+        OrtTypeInfo* typeinfo;
+        bool flag = CheckStatus(g_ort->SessionGetOutputTypeInfo(session, i, &typeinfo));
+        if(!flag){
+            g_ort->ReleaseTypeInfo(typeinfo);
+            continue;
+        }
+        ONNXType type;
+        g_ort->GetOnnxTypeFromTypeInfo(typeinfo, &type);
+        if(type == ONNXType::ONNX_TYPE_TENSOR){
+            const OrtTensorTypeAndShapeInfo* tensor_info;
+            flag = CheckStatus(g_ort->CastTypeInfoToTensorInfo(typeinfo, &tensor_info));
+            if(!flag){
+                g_ort->ReleaseTypeInfo(typeinfo);
+                continue;
+            }
+            ONNXTensorElementDataType type;
+            flag = CheckStatus(g_ort->GetTensorElementType(tensor_info, &type));
+            if(!flag){
+                g_ort->ReleaseTypeInfo(typeinfo);
+                continue;
+            }
+            printf("tensor nodes type: %d\n", type);
+        }
+        else if(type == ONNXType::ONNX_TYPE_SEQUENCE){
+            const OrtSequenceTypeInfo *sequence_info;
+            flag = CheckStatus(g_ort->CastTypeInfoToSequenceTypeInfo(typeinfo, &sequence_info));
+            if(!flag){
+                g_ort->ReleaseTypeInfo(typeinfo);
+                continue;
+            }
+            OrtTypeInfo *type;
+            flag = CheckStatus(g_ort->GetSequenceElementType(sequence_info, &type));
+            if(!flag){
+                g_ort->ReleaseTypeInfo(typeinfo);
+                g_ort->ReleaseTypeInfo(type);
+                continue;
+            }
+            ONNXType otype;
+            g_ort->GetOnnxTypeFromTypeInfo(type, &otype);
+            printf("sequecne item ONNXType: %d\n", otype);
+            if(otype == ONNXType::ONNX_TYPE_MAP){
+                const OrtMapTypeInfo * map_info;
+                g_ort->CastTypeInfoToMapTypeInfo(type, &map_info);
+                ONNXTensorElementDataType keytype;
+                g_ort->GetMapKeyType(map_info, &keytype);
+                ONNXTensorElementDataType valuetype;
+                g_ort->GetMapKeyType(map_info, &valuetype);
+
+                printf("in sequecne: key is %d, value is %d\n", keytype, valuetype);
+            }
+
+
+            g_ort->ReleaseTypeInfo(type);
+        }
+        g_ort->ReleaseTypeInfo(typeinfo);
+    }
 }
